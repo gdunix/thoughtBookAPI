@@ -1,0 +1,235 @@
+require('../../models/Books/bookModel');
+require('../../models/Books/stateModel');
+require('../../models/Books/authorModel');
+require('../../models/genreModel');
+require('../../models/quoteModel');
+var mongoose = require('mongoose'),
+Book = mongoose.model('Book'),
+State = mongoose.model('State'),
+Author = mongoose.model('Author'),
+Genre = mongoose.model('Genre'),
+Quote = mongoose.model('Quote'),
+winston = require('winston'),
+messages = require('../../utils/constants');
+
+function read_a_book_full(req, res) {
+    Book.
+    findById(req.params.bookId)
+    .populate('author')
+    .populate('state')
+    .populate('genre')
+    .exec(function (err, book) {
+      if (err){
+        console.log(error);
+        return res.status(500).send(messages.getBooksError);  
+      }
+      winston.info(book);
+      res.json(book);
+    });
+};
+
+exports.list_all_books = function(req, res) {
+    Book.find({})
+    .populate('author')
+    .populate('state')
+    .populate('genres')
+    .populate('quotes')
+    .exec(function (err, books) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(messages.getBooksError);  
+      }
+
+      res.json(books);
+    });
+};
+
+exports.create_a_book = function(req, res) {
+  var new_book= new Book(req.body);
+  new_book.save(function(err, book) {
+    if (err)
+      res.send(err);
+    winston.info('New Book Added');
+    Book.
+    findById(book._id)
+    .populate('author')
+    .populate('state')
+    .exec(function (err, book) {
+      if (err){
+        res.send(err);
+      }
+      winston.info(book);
+      res.json(book);
+    });
+  });
+};
+  
+exports.read_a_book_full = function(req, res) {
+  Book.
+  findById(req.params.bookId)
+  .populate('author')
+  .populate('state')
+  .populate('genres')
+  .populate('quotes')
+  .exec(function (err, book) {
+    if (err){
+      console.log('error - read_a_book_full');
+      return res.status(500).send(messages.getBooksError);  
+    }
+    res.json(book);
+  });
+};
+
+exports.read_a_book = function(req, res) {
+  Book.
+  findById(req.params.bookId)
+  .populate('author')
+  .exec(function (err, book) {
+    if (err){
+      console.log(err);
+      return res.status(500).send(messages.getBooksError);  
+    }
+    res.json(book);
+  });
+};
+
+exports.update_a_book = function(req, res) {
+  Book.findOneAndUpdate({_id: req.params.bookId}, req.body, {new: true})
+  .populate('author')
+  .populate('state')
+  .exec(function(err, book) {
+    if (err)
+      res.send(err);
+    res.json(book);
+  });
+};
+
+exports.delete_a_book = function(req, res) {
+  Book.remove({
+    _id: req.params.bookId
+  }, function(err, book) {
+    if (err)
+      res.send(err);
+    res.json({ message: 'Book successfully deleted' });
+  });
+};
+
+exports.list_all_byState = function(req, res) {
+  var limit = req.params.limit,
+      state = req.params.state;
+  console.log(state)
+  State.findOne({name: state}, function (error, state) {
+    if (error) {
+      console.log(error);
+      return res.status(500).send(messages.getBooksError);     
+    }
+    if(state === null) {
+      return res.status(500).send(messages.getBooksError);
+    }
+
+    Book.find({state: state._id}).sort({name: -1}).limit(parseInt(limit))
+    .populate('author')
+    .populate('state')
+    .exec(function (err, books) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(messages.getBooksError);  
+      }
+      res.status(200).send(books);
+    })
+  })
+};
+
+exports.list_all_bestbyGenre = function(req, res){
+  var limit = req.params.limit,
+      genreName = req.params.genreName;
+
+  Genre.findOne({name: genreName}, function (error, genre) {
+
+    if (error){
+      console.log(error);
+      return res.status(500).send(messages.getBooksError);     
+    }
+    if(genre === null) {
+      return res.status(500).send(messages.getBooksError);
+    }
+    
+    Book.find({ genres: { $in: [genre._id] }}).sort({grade: -1}).limit(parseInt(limit))
+    .populate('state')
+    .exec(function (err, books) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(messages.getBooksError);   
+    }
+    res.json(books);
+    })
+  })
+}
+
+exports.list_all_ByAuthor = function(req, res){
+  var id = req.params.authorId;
+
+  Book.find({ author: id}).sort({grade: -1})
+    .exec(function (err, books) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(messages.getBooksError);   
+    }
+    res.json(books);
+    })
+}
+
+exports.list_best = function(req, res){
+  Book.find({}).sort({grade: -1}).limit(parseInt(limit))
+  .exec(function (err, books) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(messages.getBooksError); 
+    }
+    res.json(books);
+  })
+}
+
+exports.list_all_books_states = function(req, res) {
+  State.find({}).exec(function(err, states) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(messages.getBooksError); 
+    }
+        
+    res.json(states);
+});
+}
+
+exports.create_book_quote = function(req, res){
+  var bookId = req.params.bookId;
+  console.log(bookId)
+  var new_quote= new Quote(req.body);
+  new_quote.save(function(err, quote) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(messages.getBooksError); 
+    }
+    Book.findById(bookId, function (error, book) {
+      if (error) {
+        console.log(error);
+        return res.status(500).send(messages.getBooksError); 
+      }
+      if (!book){
+        return res.status(404).send(messages.getBooksError); 
+      } else{
+        book.quotes.push(new_quote);
+        book.save(function (err, updatedBook) {
+          if (err) {
+            console.log(err);
+            return res.status(500).send(messages.err); 
+          }
+          res.send(updatedBook);
+        });
+      }
+      
+    })
+
+  });
+}
+
