@@ -4,6 +4,7 @@ const chaiHttp = require('chai-http');
 let should = chai.should();
 
 chai.use(chaiHttp);
+
 let Author = require('../../models/Books/authorModel');
 const app = require('../../server.js');
 
@@ -13,6 +14,24 @@ describe('Authors', () => {
            done();         
         });     
     });
+    it('/GET all authors', (done) => {
+        let author = new Author({
+            name: 'James Jones'
+        });
+        author.save((err, author) => {
+            chai.request(app)
+            .get('/api/authors')
+            .end((error, res) => {
+                if (error) done(error);
+                // Now let's check our response
+                res.should.have.status(200);
+                res.body.should.be.a('array');
+                res.body.length.should.be.eql(1);
+                done();
+            });
+        })        
+    });
+
     describe('/POST author', () => {
         it('it post an author', (done) => {
           let author = {
@@ -28,18 +47,5 @@ describe('Authors', () => {
               });
         });
   
-    });
-
-    it('/GET all authors', (done) => {
-        chai.request(app)
-            .get('/api/authors')
-            .end((error, res) => {
-                if (error) done(error);
-                // Now let's check our response
-                res.should.have.status(200);
-                res.body.should.be.a('array');
-                res.body.length.should.be.eql(0);
-                done();
-            });
-    });
+    });  
 });

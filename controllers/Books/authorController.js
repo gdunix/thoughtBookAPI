@@ -3,7 +3,6 @@ var mongoose = require('mongoose'),
     Author = mongoose.model('Author');
 
 exports.add_author = function(req, res) {
-    console.log(req.body);
     var new_author= new Author(req.body);
     new_author.save(function(err, author) {
         if (err) {
