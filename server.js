@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
     jwt = require('jsonwebtoken');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/thoughtBook')
+mongoose.connect(config.db)
     .then(() =>  console.log('connection successful'))
     .catch((err) => console.error(err));
 
@@ -46,3 +46,5 @@ app.listen(port);
 
 
 console.log('ThoughtBook RESTful API server started on: ' + port);
+
+module.exports = app;
