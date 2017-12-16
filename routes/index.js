@@ -29,6 +29,9 @@ router.route('/book/:bookId')
 router.route('/bookFull/:bookId')
     .get(bookController.read_a_book_full)
 
+router.route('/booksByTitle/:title')
+    .get(bookController.findBooksByTitle)
+
 router.route('/booksByState/:state/:limit')
     .get(bookController.list_all_byState);
 router.route('/booksBestByGenre/:genreName/:limit')

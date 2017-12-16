@@ -9,7 +9,7 @@ State = mongoose.model('State'),
 Author = mongoose.model('Author'),
 Genre = mongoose.model('Genre'),
 Quote = mongoose.model('Quote'),
-winston = require('winston'),
+logger = require('../../utils/logger'),
 messages = require('../../utils/constants');
 
 function read_a_book_full(req, res) {
@@ -20,10 +20,10 @@ function read_a_book_full(req, res) {
     .populate('genre')
     .exec(function (err, book) {
       if (err){
-        console.log(error);
+        logger.log('error', err);
         return res.status(500).send(messages.getBooksError);  
       }
-      winston.info(book);
+
       res.json(book);
     });
 };
@@ -36,7 +36,7 @@ exports.list_all_books = function(req, res) {
     .populate('quotes')
     .exec(function (err, books) {
       if (err) {
-        console.log(err);
+        logger.log('error', err);
         return res.status(500).send(messages.getBooksError);  
       }
 
@@ -47,18 +47,21 @@ exports.list_all_books = function(req, res) {
 exports.create_a_book = function(req, res) {
   var new_book= new Book(req.body);
   new_book.save(function(err, book) {
-    if (err)
-      res.send(err);
-    winston.info('New Book Added');
+    if (err) {
+      logger.log('error', err);
+      return res.status(500).send(messages.getBooksError);  
+    };
+
     Book.
     findById(book._id)
     .populate('author')
     .populate('state')
     .exec(function (err, book) {
       if (err){
-        res.send(err);
-      }
-      winston.info(book);
+        logger.log('error', err);
+        return res.status(500).send(messages.getBooksError); 
+      };
+      logger.log('info', 'New Book Added ' + book);
       res.json(book);
     });
   });
@@ -73,7 +76,7 @@ exports.read_a_book_full = function(req, res) {
   .populate('quotes')
   .exec(function (err, book) {
     if (err){
-      console.log('error - read_a_book_full');
+      logger.log('error', err);
       return res.status(500).send(messages.getBooksError);  
     }
     res.json(book);
@@ -86,30 +89,45 @@ exports.read_a_book = function(req, res) {
   .populate('author')
   .exec(function (err, book) {
     if (err){
-      console.log(err);
+      logger.log('error', err);
       return res.status(500).send(messages.getBooksError);  
     }
     res.json(book);
   });
 };
 
+exports.findBooksByTitle = function(req, res) {
+  var title = req.params.title;
+  Book.find({ "title" : new RegExp(title, 'i') }).sort({title: -1})
+  .select('_id title')
+  .exec(function (err, books) {
+    if (err) {
+      logger.log('error', err);
+      return res.status(500).send(messages.getBooksError);   
+    }
+    res.json(books);
+  })
+}
+
 exports.update_a_book = function(req, res) {
   Book.findOneAndUpdate({_id: req.params.bookId}, req.body, {new: true})
   .populate('author')
   .populate('state')
   .exec(function(err, book) {
-    if (err)
-      res.send(err);
+    if (err) {
+      logger.log('error', err);
+      return res.status(500).send(messages.getBooksError);   
+    }
     res.json(book);
   });
 };
 
 exports.delete_a_book = function(req, res) {
-  Book.remove({
-    _id: req.params.bookId
-  }, function(err, book) {
-    if (err)
-      res.send(err);
+  Book.remove({_id: req.params.bookId}, function(err, book) {
+    if (err) {
+      logger.log('error', err);
+      return res.status(500).send(messages.getBooksError);   
+    }
     res.json({ message: 'Book successfully deleted' });
   });
 };
@@ -117,10 +135,10 @@ exports.delete_a_book = function(req, res) {
 exports.list_all_byState = function(req, res) {
   var limit = req.params.limit,
       state = req.params.state;
-  console.log(state)
+
   State.findOne({name: state}, function (error, state) {
     if (error) {
-      console.log(error);
+      logger.log('error', error);
       return res.status(500).send(messages.getBooksError);     
     }
     if(state === null) {
@@ -132,7 +150,7 @@ exports.list_all_byState = function(req, res) {
     .populate('state')
     .exec(function (err, books) {
       if (err) {
-        console.log(err);
+        logger.log('error', err);
         return res.status(500).send(messages.getBooksError);  
       }
       res.status(200).send(books);
@@ -145,9 +163,8 @@ exports.list_all_bestbyGenre = function(req, res){
       genreName = req.params.genreName;
 
   Genre.findOne({name: genreName}, function (error, genre) {
-
     if (error){
-      console.log(error);
+      logger.log('error', error);
       return res.status(500).send(messages.getBooksError);     
     }
     if(genre === null) {
@@ -158,7 +175,7 @@ exports.list_all_bestbyGenre = function(req, res){
     .populate('state')
     .exec(function (err, books) {
       if (err) {
-        console.log(err);
+        logger.log('error', err);
         return res.status(500).send(messages.getBooksError);   
     }
     res.json(books);
@@ -172,7 +189,7 @@ exports.list_all_ByAuthor = function(req, res){
   Book.find({ author: id}).sort({grade: -1})
     .exec(function (err, books) {
       if (err) {
-        console.log(err);
+        logger.log('error', err);
         return res.status(500).send(messages.getBooksError);   
     }
     res.json(books);
@@ -183,7 +200,7 @@ exports.list_best = function(req, res){
   Book.find({}).sort({grade: -1}).limit(parseInt(limit))
   .exec(function (err, books) {
     if (err) {
-      console.log(err);
+      logger.log('error', err);
       return res.status(500).send(messages.getBooksError); 
     }
     res.json(books);
@@ -193,7 +210,7 @@ exports.list_best = function(req, res){
 exports.list_all_books_states = function(req, res) {
   State.find({}).exec(function(err, states) {
     if (err) {
-      console.log(err);
+      logger.log('error', err);
       return res.status(500).send(messages.getBooksError); 
     }
         
@@ -203,16 +220,15 @@ exports.list_all_books_states = function(req, res) {
 
 exports.create_book_quote = function(req, res){
   var bookId = req.params.bookId;
-  console.log(bookId)
   var new_quote= new Quote(req.body);
   new_quote.save(function(err, quote) {
     if (err) {
-      console.log(err);
+      logger.log('error', err);
       return res.status(500).send(messages.getBooksError); 
     }
     Book.findById(bookId, function (error, book) {
       if (error) {
-        console.log(error);
+        logger.log('error', error);
         return res.status(500).send(messages.getBooksError); 
       }
       if (!book){
@@ -221,7 +237,7 @@ exports.create_book_quote = function(req, res){
         book.quotes.push(new_quote);
         book.save(function (err, updatedBook) {
           if (err) {
-            console.log(err);
+            logger.log('error', err);
             return res.status(500).send(messages.err); 
           }
           res.send(updatedBook);

@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
     utils = require('../utils/index'),
     winston = require('winston');
+    logger = require('../utils/logger');
 
 function isUserUnique(reqBody, cb) {
     var username = reqBody.username ? reqBody.username.trim() : '';
@@ -17,9 +18,10 @@ function isUserUnique(reqBody, cb) {
         'email': new RegExp(["^", email, "$"].join(""), "i")
       }]
     }, function(err, user) {
-      if (err)
+      if (err) {
         throw err;
-  
+      }
+      
       if (!user) {
         cb();
         return;
@@ -44,6 +46,7 @@ exports.signup = function(req, res) {
     var body = req.body;
     isUserUnique(body, function(err) {
       if (err) {
+        logger.log('error', err);
         return res.status(403).json(err);
       };
 
@@ -58,9 +61,11 @@ exports.signup = function(req, res) {
       });
 
       user.save(function(err, user) { 
-        if (err) throw err;
+        if (err) {
+          logger.log('error', err);
+          return res.status(500).json(err);
+        }
         var token = utils.generateToken(user); 
-        console.log('Success');
         res.json({
           user: user,
           token: token
@@ -70,7 +75,6 @@ exports.signup = function(req, res) {
 }
 
 exports.signin = function(req, res) {
-    winston.info('Sign In Call');
     User
     .findOne({username: req.body.username}) 
     .select({
@@ -79,7 +83,10 @@ exports.signin = function(req, res) {
         createdAt: 0
     }) //make sure to not return password (although it is hashed using bcrypt)
     .exec(function(err, user) {
-        if (err) throw err;
+        if (err) {
+          logger.log('error', err);
+          return res.status(500).json(err);
+        };
 
         if (!user) {
             return res.status(404).json({
@@ -119,15 +126,16 @@ exports.getUserFromToken = function(req, res) {
 
     utils.verifyToken(token, function(err, user) {
       if(err) {
-        console.log(err);
+        logger.log('error', err);
         res.json({
           message: 'Error occured'
       });
       }
-      User.findById({
-        '_id': user._id
-        }, function(err, user) {
-           if (err) throw err;
+      User.findById({'_id': user._id}, function(err, user) {
+          if (err) {
+            logger.log('error', err);
+            return res.status(500).json(err);
+          };
               user = utils.getCleanUser(user); 
              //Note: you can renew token by creating new token(i.e.    
              //refresh it)w/ new expiration time at this point, but I’m 
