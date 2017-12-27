@@ -1,10 +1,7 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-var Schema = mongoose.Schema;
-
-var StateSchema = Schema({
+let StateSchema = mongoose.Schema({
     name: {type: String, required: true, max: 100}
 });
 
-//Export model
-module.exports = mongoose.model('State', StateSchema, 'states');
+export default mongoose.model('State', StateSchema, 'states');

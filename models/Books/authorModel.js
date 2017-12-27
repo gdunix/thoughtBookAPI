@@ -1,13 +1,9 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-var Schema = mongoose.Schema;
-
-var AuthorSchema = Schema(
+let AuthorSchema = mongoose.Schema(
   {
     name: {type: String, required: true, max: 100}
   }
 );
 
-
-//Export model
-module.exports = mongoose.model('Author', AuthorSchema);
+export default mongoose.model('Author', AuthorSchema);

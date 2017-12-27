@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-var BookSchema = Schema({
+let BookSchema = mongoose.Schema({
   title: {type: String, required: true},
   author: {type: Schema.ObjectId, ref: 'Author', required: true},
   comments: {type: String},
@@ -25,5 +25,4 @@ BookSchema
   return '/catalog/book/' + this._id;
 });
 
-//Export model
-module.exports = mongoose.model('Book', BookSchema);
+export default mongoose.model('Book', BookSchema);

@@ -1,16 +1,10 @@
-require('../../models/Books/bookModel');
-require('../../models/Books/stateModel');
-require('../../models/Books/authorModel');
-require('../../models/genreModel');
-require('../../models/quoteModel');
-var mongoose = require('mongoose'),
-Book = mongoose.model('Book'),
-State = mongoose.model('State'),
-Author = mongoose.model('Author'),
-Genre = mongoose.model('Genre'),
-Quote = mongoose.model('Quote'),
-logger = require('../../utils/logger'),
-messages = require('../../utils/constants');
+import logger from '../../utils/logger';
+import Book from '../../models/Books/bookModel';
+import State from '../../models/Books/stateModel';
+import Author from '../../models/Books/authorModel';
+import Genre from '../../models/genreModel';
+import Quote from '../../models/quoteModel';
+import messages from '../../utils/constants';
 
 function read_a_book_full(req, res) {
     Book.
@@ -28,7 +22,7 @@ function read_a_book_full(req, res) {
     });
 };
 
-exports.list_all_books = function(req, res) {
+export function list_all_books(req, res) {
     Book.find({})
     .populate('author')
     .populate('state')
@@ -44,7 +38,7 @@ exports.list_all_books = function(req, res) {
     });
 };
 
-exports.create_a_book = function(req, res) {
+export function create_a_book(req, res) {
   var new_book= new Book(req.body);
   new_book.save(function(err, book) {
     if (err) {
@@ -67,7 +61,7 @@ exports.create_a_book = function(req, res) {
   });
 };
   
-exports.read_a_book_full = function(req, res) {
+export function read_a_book_full(req, res) {
   Book.
   findById(req.params.bookId)
   .populate('author')
@@ -83,7 +77,7 @@ exports.read_a_book_full = function(req, res) {
   });
 };
 
-exports.read_a_book = function(req, res) {
+export function read_a_book(req, res) {
   Book.
   findById(req.params.bookId)
   .populate('author')
@@ -96,7 +90,7 @@ exports.read_a_book = function(req, res) {
   });
 };
 
-exports.findBooksByTitle = function(req, res) {
+export function findBooksByTitle(req, res) {
   var title = req.params.title;
   Book.find({ "title" : new RegExp(title, 'i') }).sort({title: -1})
   .select('_id title')
@@ -109,7 +103,7 @@ exports.findBooksByTitle = function(req, res) {
   })
 }
 
-exports.update_a_book = function(req, res) {
+export function update_a_book(req, res) {
   Book.findOneAndUpdate({_id: req.params.bookId}, req.body, {new: true})
   .populate('author')
   .populate('state')
@@ -122,7 +116,7 @@ exports.update_a_book = function(req, res) {
   });
 };
 
-exports.delete_a_book = function(req, res) {
+export function delete_a_book(req, res) {
   Book.remove({_id: req.params.bookId}, function(err, book) {
     if (err) {
       logger.log('error', err);
@@ -132,7 +126,7 @@ exports.delete_a_book = function(req, res) {
   });
 };
 
-exports.list_all_byState = function(req, res) {
+export function list_all_byState(req, res) {
   var limit = req.params.limit,
       state = req.params.state;
 
@@ -158,7 +152,7 @@ exports.list_all_byState = function(req, res) {
   })
 };
 
-exports.list_all_bestbyGenre = function(req, res){
+export function list_all_bestbyGenre(req, res){
   var limit = req.params.limit,
       genreName = req.params.genreName;
 
@@ -183,7 +177,7 @@ exports.list_all_bestbyGenre = function(req, res){
   })
 }
 
-exports.list_all_ByAuthor = function(req, res){
+export function list_all_ByAuthor(req, res){
   var id = req.params.authorId;
 
   Book.find({ author: id}).sort({grade: -1})
@@ -196,7 +190,7 @@ exports.list_all_ByAuthor = function(req, res){
     })
 }
 
-exports.list_best = function(req, res){
+export function list_best(req, res){
   Book.find({}).sort({grade: -1}).limit(parseInt(limit))
   .exec(function (err, books) {
     if (err) {
@@ -207,7 +201,7 @@ exports.list_best = function(req, res){
   })
 }
 
-exports.list_all_books_states = function(req, res) {
+export function list_all_books_states(req, res) {
   State.find({}).exec(function(err, states) {
     if (err) {
       logger.log('error', err);
@@ -218,7 +212,7 @@ exports.list_all_books_states = function(req, res) {
 });
 }
 
-exports.create_book_quote = function(req, res){
+export function create_book_quote(req, res){
   var bookId = req.params.bookId;
   var new_quote= new Quote(req.body);
   new_quote.save(function(err, quote) {

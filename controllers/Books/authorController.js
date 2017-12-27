@@ -1,9 +1,7 @@
-require('../../models/Books/authorModel');
-var mongoose = require('mongoose'),
-    Author = mongoose.model('Author'),
-    logger = require('../../utils/logger');
-
-exports.add_author = function(req, res) {
+import logger from '../../utils/logger';
+import Author from '../../models/Books/authorModel';
+    
+export function add_author(req, res) {
     var new_author= new Author(req.body);
     new_author.save(function(err, author) {
         if (err){
@@ -15,7 +13,7 @@ exports.add_author = function(req, res) {
     });
     };
     
-exports.list_all_authors = function(req, res) {
+export function list_all_authors(req, res) {
     Author.find({}, function(err, author) {
         if (err){
             logger.log('error', err);

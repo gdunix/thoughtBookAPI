@@ -1,12 +1,12 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-var Schema = mongoose.Schema;
+let Schema = mongoose.Schema;
 
-var GenreSchema = Schema(
+let GenreSchema = mongoose.Schema(
   {
     name: {type: String, required: true, max: 100},
     category: {type: Schema.ObjectId, ref: 'Category', required: true}
   }
 );
 
-module.exports = mongoose.model('Genre', GenreSchema);
+export default mongoose.model('Genre', GenreSchema);

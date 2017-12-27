@@ -1,11 +1,8 @@
-require('../models/userModel');
-
-var mongoose = require('mongoose'),
-    User = mongoose.model('User'),
-    bcrypt = require('bcrypt'),
-    utils = require('../utils/index'),
-    winston = require('winston');
-    logger = require('../utils/logger');
+import logger from '../utils/logger';
+import User from '../models/userModel';
+import * as utils from '../utils/index';
+import winston from 'winston';
+import bcrypt from 'bcrypt';
 
 function isUserUnique(reqBody, cb) {
     var username = reqBody.username ? reqBody.username.trim() : '';
@@ -41,7 +38,7 @@ function isUserUnique(reqBody, cb) {
     });
 }
 
-exports.signup = function(req, res) {  
+export function signup(req, res) {  
     winston.info('Sign Up Call');
     var body = req.body;
     isUserUnique(body, function(err) {
@@ -74,7 +71,7 @@ exports.signup = function(req, res) {
     });
 }
 
-exports.signin = function(req, res) {
+export function signin(req, res) {
     User
     .findOne({username: req.body.username}) 
     .select({
@@ -113,7 +110,7 @@ exports.signin = function(req, res) {
     });
 }
 
-exports.getUserFromToken = function(req, res) {
+export function getUserFromToken(req, res) {
     winston.info('Get User From Token Call');
     var token = req.body.token || req.query.token,
         hasHeader = req.headers['x-access-token'];
@@ -146,7 +143,5 @@ exports.getUserFromToken = function(req, res) {
                 token: token
             });
       });
-    });
-
-    
+    });   
 }

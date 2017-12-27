@@ -1,8 +1,6 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-var Schema = mongoose.Schema;
-
-var DirectorSchema = Schema(
+let DirectorSchema = mongoose.Schema(
   {
     first_name: {type: String, required: true, max: 100},
     last_name: {type: String, required: true, max: 100}
@@ -23,5 +21,4 @@ AuthorSchema
   return '/catalog/author/' + this._id;
 });
 
-//Export model
-module.exports = mongoose.model('Director', DirectorSchema);
+export default mongoose.model('Director', DirectorSchema);

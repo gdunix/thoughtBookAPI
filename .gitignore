@@ -2,3 +2,5 @@
 /access.log
 access.log
 /combined.log
+/dist
+.babelrc

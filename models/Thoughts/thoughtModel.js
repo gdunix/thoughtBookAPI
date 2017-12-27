@@ -1,8 +1,7 @@
-'use strict';
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+let Schema = mongoose.Schema;
 
-var ThoughtSchema = new Schema({
+let ThoughtSchema = new Schema({
     name: {
       type: String,
       required: 'Enter a name for the Thought'
@@ -20,4 +19,4 @@ var ThoughtSchema = new Schema({
     }
   });
 
-module.exports = mongoose.model('Thought', ThoughtSchema );
+export default mongoose.model('Thought', ThoughtSchema );

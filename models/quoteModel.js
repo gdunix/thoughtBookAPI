@@ -1,12 +1,10 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-var Schema = mongoose.Schema;
-
-var QuoteSchema = Schema(
+let QuoteSchema = mongoose.Schema(
   {
     name: {type: String, max: 100},
     text: {type: String, required: true}
   }
 );
 
-module.exports = mongoose.model('Quote', QuoteSchema);
+export default mongoose.model('Quote', QuoteSchema);

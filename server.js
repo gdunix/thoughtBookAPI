@@ -1,13 +1,15 @@
-var mongoose = require('mongoose'),
-    express = require('express'),
-    app = express(),
-    port = process.env.PORT || 4000,
-    bodyParser = require('body-parser')
-    config = require('./config'),
-    fs = require('fs'),
-    morgan = require('morgan'),
-    path = require('path'),
-    jwt = require('jsonwebtoken');
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import fs from 'fs';
+import morgan from 'morgan';
+import path from 'path';
+import jwt from 'jsonwebtoken';
+import config from './config';
+import router from './routes/index';
+
+let app = express(),
+    port = process.env.PORT || 4000;
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.db)
@@ -29,14 +31,12 @@ app.use((req, res, next) => {
 });
 
 // create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
+let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
 
 // setup the logger
 app.use(morgan('combined', {stream: accessLogStream}))
 
-var routes = require('./routes/index');
-
-app.use('/api', routes);
+app.use('/api', router);
 
 app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl + ' not found'})
@@ -47,4 +47,4 @@ app.listen(port);
 
 console.log('ThoughtBook RESTful API server started on: ' + port);
 
-module.exports = app;
+export default app;

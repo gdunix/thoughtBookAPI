@@ -1,11 +1,8 @@
-require('../../models/Movies/movieModel');
-var mongoose = require('mongoose'),
-Movie = mongoose.model('Movie'),
-logger = require('../../utils/logger'),
-messages = require('../../utils/constants');
+import logger from '../../utils/logger';
+import Movie from '../../models/Movies/movieModel';
+import messages from '../../utils/constants';
 
-
-exports.list_all_movies = function(req, res) {
+export function list_all_movies(req, res) {
     Movie.find({})
     .exec(function (err, movies) {
       if (err) {
@@ -17,7 +14,7 @@ exports.list_all_movies = function(req, res) {
     });
 };
 
-exports.create_a_movie = function(req, res) {
+export function create_a_movie(req, res) {
   var new_movie= new Movie(req.body);
   new_movie.save(function(err, movie) {
     if (err){
@@ -37,7 +34,7 @@ exports.create_a_movie = function(req, res) {
   });
 };
   
-exports.read_a_movie_full = function(req, res) {
+export function read_a_movie_full(req, res) {
   Movie.
   findById(req.params.movieId)
   .exec(function (err, movie) {
@@ -49,7 +46,7 @@ exports.read_a_movie_full = function(req, res) {
   });
 };
 
-exports.read_a_movie = function(req, res) {
+export function read_a_movie(req, res) {
   Movie.
   findById(req.params.movieId)
   .exec(function (err, movie) {
@@ -61,7 +58,7 @@ exports.read_a_movie = function(req, res) {
   });
 };
 
-exports.update_a_movie = function(req, res) {
+export function update_a_movie(req, res) {
   Movie.findOneAndUpdate({_id: req.params.movieId}, req.body, {new: true})
   .populate('author')
   .populate('state')
@@ -75,7 +72,7 @@ exports.update_a_movie = function(req, res) {
   });
 };
 
-exports.delete_a_movie = function(req, res) {
+export function delete_a_movie(req, res) {
   Movie.remove({
     _id: req.params.movieId
   }, function(err, movie) {
@@ -87,7 +84,7 @@ exports.delete_a_movie = function(req, res) {
   });
 };
 
-exports.findMovieByTitle = function(req, res) {
+export function findMovieByTitle(req, res) {
   var title = req.params.title;
   Movie.find({ "title" : new RegExp(title, 'i') }).sort({title: -1})
   .select('_id title release_date')
@@ -100,7 +97,7 @@ exports.findMovieByTitle = function(req, res) {
   })
 }
 
-exports.findRecentlyWatched = function(req, res) {
+export function findRecentlyWatched(req, res) {
   var limit = req.params.limit;
   Movie.find({ $and: [{grade: { $gt: 0}}, {seenAt: {$exists: true}} ]}).sort({seenAt: -1}).limit(parseInt(limit))
   .select('_id title grade imageURL')
@@ -113,7 +110,7 @@ exports.findRecentlyWatched = function(req, res) {
   })
 }
 
-exports.releaseDates = function(req, res) {
+export function releaseDates(req, res) {
   Movie.find()
   .distinct('release_date')
   .exec(function (err, years) {
@@ -131,7 +128,7 @@ exports.releaseDates = function(req, res) {
   }) 
 }
 
-exports.moviesByReleaseDate = function(req, res) {
+export function moviesByReleaseDate(req, res) {
   var dt = req.params.releaseDate;
   Movie.find({ "release_date" : dt }).sort({grade: -1})
   .select('_id title grade imageURL')

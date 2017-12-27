@@ -1,7 +1,7 @@
-var jwt = require('jsonwebtoken'),
-    config = require('../config');
+import  jwt from 'jsonwebtoken';
+import config from '../config';
 
-exports.generateToken = function(user) {
+export function generateToken(user) {
     //1. Dont use password and other sensitive fields
     //2. Use fields that are useful in other parts of the     
     //app/collections/models
@@ -19,7 +19,7 @@ exports.generateToken = function(user) {
 }
 
 //strips internal fields like password and verifyEmailToken etc
-exports.getCleanUser = function(user) {
+export function getCleanUser(user) {
   if(!user) return {};
   
   var u = user.toJSON();
@@ -30,7 +30,7 @@ exports.getCleanUser = function(user) {
   }
 }
 
-exports.verifyToken = function(token, cb) {
+export function verifyToken(token, cb) {
   jwt.verify(token, config.JWT_SECRET.value, function(err, user) {
       cb(err, user);
   });

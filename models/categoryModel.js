@@ -1,11 +1,9 @@
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-var Schema = mongoose.Schema;
-
-var CategorySchema = Schema(
+let CategorySchema = mongoose.Schema(
   {
     name: {type: String, required: true, max: 100}
   }
 );
 
-module.exports = mongoose.model('Category', CategorySchema);
+export default mongoose.model('Category', CategorySchema);

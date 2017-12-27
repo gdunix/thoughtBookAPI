@@ -1,8 +1,8 @@
-'use strict';
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-var MovieSchema = Schema({
+let Schema = mongoose.Schema;
+
+let MovieSchema = mongoose.Schema({
     title: {type: String, required: true},
     extId: {type: Number},
     director: {type: String, required: true},
@@ -21,5 +21,4 @@ var MovieSchema = Schema({
     quotes: [{type: Schema.ObjectId, ref: 'Quote'}]
 });
   
-  //Export model
-  module.exports = mongoose.model('Movie', MovieSchema);
+export default mongoose.model('Movie', MovieSchema);

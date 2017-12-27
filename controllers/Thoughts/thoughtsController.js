@@ -1,8 +1,6 @@
-require('../../models/Thoughts/thoughtModel');
-var mongoose = require('mongoose'),
-Thought = mongoose.model('Thought');
+import Thought from '../../models/Thoughts/thoughtModel';
 
-exports.list_all_thoughts = function(req, res) {
+export function list_all_thoughts(req, res) {
     Thought.find({}, function(err, thought) {
     if (err) {
         res.send(err);
@@ -12,7 +10,7 @@ exports.list_all_thoughts = function(req, res) {
     });
 };
 
-exports.list_frontpage_thoughts = function(req, res) {
+export function list_frontpage_thoughts(req, res) {
   Thought.find({frontpage: true}, function(err, thoughts) {
     if (err) {
         res.send(err);
@@ -22,7 +20,7 @@ exports.list_frontpage_thoughts = function(req, res) {
     });
 }
 
-exports.create_a_thought = function(req, res) {
+export function create_a_thought(req, res) {
     var new_thought= new Thought(req.body);
     new_thought.save(function(err, thought) {
       if (err)
@@ -32,7 +30,7 @@ exports.create_a_thought = function(req, res) {
   };
   
   
-exports.read_a_thought = function(req, res) {
+export function read_a_thought(req, res) {
   Thought.findById(req.params.thoughtId, function(err, thought) {
     if (err)
       res.send(err);
@@ -41,7 +39,7 @@ exports.read_a_thought = function(req, res) {
 };
 
 
-exports.update_a_thought = function(req, res) {
+export function update_a_thought(req, res) {
   Thought.findOneAndUpdate({_id: req.params.thoughtId}, req.body, {new: true}, function(err, thought) {
     if (err)
       res.send(err);
@@ -50,7 +48,7 @@ exports.update_a_thought = function(req, res) {
 };
 
 
-exports.delete_a_thought = function(req, res) {
+export function delete_a_thought(req, res) {
   Thought.remove({
     _id: req.params.thoughtId
   }, function(err, thought) {

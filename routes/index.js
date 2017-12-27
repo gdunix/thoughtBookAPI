@@ -1,10 +1,12 @@
-var router = require('express').Router(),
-    authorController = require('../controllers/Books/authorController'),
-    bookController = require('../controllers/Books/booksController'),
-    thoughtController = require('../controllers/Thoughts/thoughtsController'),
-    genreController = require('../controllers/genreController'),
-    userController = require('../controllers/userController'),
-    movieController = require('../controllers/Movies/movieController');
+import express from 'express';
+import * as authorController from '../controllers/Books/authorController';
+import * as bookController from '../controllers/Books/bookController';
+import * as thoughtController from '../controllers/Thoughts/thoughtsController';
+import * as genreController from '../controllers/genreController';
+import * as userController from '../controllers/userController';
+import * as movieController from '../controllers/Movies/movieController';
+
+const router = express.Router();
 
 router.get('/health-check', (req, res) =>
     res.send('OK')
@@ -95,4 +97,4 @@ router.route('/movies/releaseDates')
 router.route('/moviesByReleaseDate/:releaseDate')
     .get(movieController.moviesByReleaseDate);
 
-module.exports = router;
+export default router;

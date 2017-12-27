@@ -1,7 +1,6 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+import mongoose from 'mongoose';
 
-var UserSchema = mongoose.Schema({
+let UserSchema = mongoose.Schema({
     name: String,
     username: String,
     email: String,
@@ -13,4 +12,4 @@ var UserSchema = mongoose.Schema({
     verifyEmailTokenExpires: Date
   });
 
-module.exports = mongoose.model('User', UserSchema );
+export default mongoose.model('User', UserSchema );

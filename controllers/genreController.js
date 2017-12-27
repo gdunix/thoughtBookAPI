@@ -1,11 +1,9 @@
-require('../models/genreModel');
-require('../models/categoryModel');
-logger = require('../utils/logger');
-var mongoose = require('mongoose'),
-    Genre = mongoose.model('Genre'),
-    Category = mongoose.model('Category');
+import Genre from '../models/genreModel';
+import Category from '../models/categoryModel';
+import logger from '../utils/logger';
 
-exports.add_book_genre = function(req, res) {
+
+export function add_book_genre(req, res) {
     Category.findOne({name: 'Books'}, function (error, category) {
         if(category) {
             var new_genre= new Genre(req.body);
@@ -22,7 +20,7 @@ exports.add_book_genre = function(req, res) {
     });
 };
     
-exports.list_all_book_genres = function(req, res) {
+export function list_all_book_genres(req, res) {
     Category.findOne({name: 'Books'}, function (error, category) {
         if (error) {
             logger.log('error', err);
