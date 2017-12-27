@@ -110,15 +110,12 @@ export function signin(req, res) {
 }
 
 export function getUserFromToken(req, res) {
-    winston.info('Get User From Token Call');
-    var token = req.body.token || req.query.token,
-        hasHeader = req.headers['x-access-token'];
+    logger.log('info','Get User From Token Call');
+    var token = req.body.token || req.query.token
     if (!token) {
+     logger.log('error','Must pass token');
      return res.status(401).json({message: 'Must pass token'});
     }
-    if (!hasHeader) {
-      return res.status(401).json({message: 'Header Error'});
-     }
 
     utils.verifyToken(token, function(err, user) {
       if(err) {

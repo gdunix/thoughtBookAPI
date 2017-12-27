@@ -1,3 +1,3 @@
 import config from './env';
 
-module.exports = config[process.env.NODE_ENV];
+export default config[process.env.NODE_ENV];
