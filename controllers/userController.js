@@ -99,7 +99,6 @@ export function signin(req, res) {
               });
             }
         });
-        console.log(user)
         let token = utils.generateToken(user);
         user = utils.getCleanUser(user);
         res.json({
