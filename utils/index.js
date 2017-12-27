@@ -13,7 +13,7 @@ export function generateToken(user) {
         image: user.image,
         isEmailVerified: user.isEmailVerified //used to prevent creating posts w/o verifying emails
       };
-    return token = jwt.sign(u, config.JWT_SECRET.value, {
+    return jwt.sign(u, config.JWT_SECRET.value, {
       expiresIn: 60 * 60 * 24 // expires in 24 hours
     });
 }
