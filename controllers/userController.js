@@ -121,6 +121,9 @@ export function getUserFromToken(req, res) {
       if(err) {
         logger.log('error', err);
         res.json({
+          user: null,
+          token: null,
+          success: false,
           message: 'Error occured'
       });
       }
@@ -136,7 +139,9 @@ export function getUserFromToken(req, res) {
              // var token = utils.generateToken(user);
             res.json({
                 user: user,
-                token: token
+                token: token,
+                success: true,
+                message: 'Success'
             });
       });
     });   
