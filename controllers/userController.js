@@ -110,7 +110,6 @@ export function signin(req, res) {
 }
 
 export function getUserFromToken(req, res) {
-    logger.log('info','Get User From Token Call');
     var token = req.body.token || req.query.token
     if (!token) {
      logger.log('error','Must pass token');
@@ -120,7 +119,7 @@ export function getUserFromToken(req, res) {
     utils.verifyToken(token, function(err, user) {
       if(err) {
         logger.log('error', err);
-        res.json({
+        return res.json({
           user: null,
           token: null,
           success: false,
