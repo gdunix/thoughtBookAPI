@@ -50,6 +50,8 @@ export function create_a_book(req, res) {
     findById(book._id)
     .populate('author')
     .populate('state')
+    .populate('genres')
+    .populate('quotes')
     .exec(function (err, book) {
       if (err){
         logger.log('error', err);
@@ -104,9 +106,13 @@ export function findBooksByTitle(req, res) {
 }
 
 export function update_a_book(req, res) {
+  console.log(req.params.bookId);
+  console.log(req.body);
   Book.findOneAndUpdate({_id: req.params.bookId}, req.body, {new: true})
   .populate('author')
   .populate('state')
+  .populate('genres')
+  .populate('quotes')
   .exec(function(err, book) {
     if (err) {
       logger.log('error', err);
