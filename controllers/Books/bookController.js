@@ -106,8 +106,6 @@ export function findBooksByTitle(req, res) {
 }
 
 export function update_a_book(req, res) {
-  console.log(req.params.bookId);
-  console.log(req.body);
   Book.findOneAndUpdate({_id: req.params.bookId}, req.body, {new: true})
   .populate('author')
   .populate('state')

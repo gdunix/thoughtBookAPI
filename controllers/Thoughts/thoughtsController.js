@@ -46,7 +46,6 @@ export const read_a_thought = (req, res) => {
 
 
 export const update_a_thought = (req, res) => {
-  console.log(req.params.thoughtId)
   Thought.findOneAndUpdate(
     { _id: req.params.thoughtId }, 
     req.body, 
