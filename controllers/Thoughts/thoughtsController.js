@@ -1,59 +1,73 @@
 import Thought from '../../models/Thoughts/thoughtModel';
 
-export function list_all_thoughts(req, res) {
-    Thought.find({}, function(err, thought) {
+export const list_all_thoughts = (req, res) => {
+  Thought.find({}, function (err, thought) {
     if (err) {
-        res.send(err);
+      logger.log('error', err);
+      return res.status(500).send(messages.generalError);
     }
-        
+
     res.json(thought);
-    });
+  });
 };
 
-export function list_frontpage_thoughts(req, res) {
-  Thought.find({frontpage: true}, function(err, thoughts) {
+export const list_frontpage_thoughts = (req, res) => {
+  Thought.find({ frontpage: true }, function (err, thoughts) {
     if (err) {
-        res.send(err);
+      logger.log('error', err);
+      return res.status(500).send(messages.generalError);
     }
-        
+
     res.json(thoughts);
-    });
+  });
 }
 
-export function create_a_thought(req, res) {
-    var new_thought= new Thought(req.body);
-    new_thought.save(function(err, thought) {
-      if (err)
-        res.send(err);
-      res.json(thought);
-    });
-  };
-  
-  
-export function read_a_thought(req, res) {
-  Thought.findById(req.params.thoughtId, function(err, thought) {
-    if (err)
-      res.send(err);
+export const create_a_thought = (req, res) => {
+  var new_thought = new Thought(req.body);
+  new_thought.save((err, thought) => {
+    if (err) {
+      logger.log('error', err);
+      return res.status(500).send(messages.generalError);
+    }
     res.json(thought);
   });
 };
 
 
-export function update_a_thought(req, res) {
-  Thought.findOneAndUpdate({_id: req.params.thoughtId}, req.body, {new: true}, function(err, thought) {
-    if (err)
-      res.send(err);
+export const read_a_thought = (req, res) => {
+  Thought.findById(req.params.thoughtId, (err, thought) => {
+    if (err) {
+      logger.log('error', err);
+      return res.status(500).send(messages.generalError);
+    }
     res.json(thought);
   });
 };
 
 
-export function delete_a_thought(req, res) {
+export const update_a_thought = (req, res) => {
+  console.log(req.params.thoughtId)
+  Thought.findOneAndUpdate(
+    { _id: req.params.thoughtId }, 
+    req.body, 
+    { new: true }, (err, thought) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.generalError);
+      }
+    res.json(thought);
+  });
+};
+
+
+export const delete_a_thought = (req, res) => {
   Thought.remove({
     _id: req.params.thoughtId
-  }, function(err, thought) {
-    if (err)
-      res.send(err);
+  }, (err, thought) => {
+    if (err) {
+      logger.log('error', err);
+      return res.status(500).send(messages.generalError);
+    }
     res.json(req.params.thoughtId);
   });
 };
