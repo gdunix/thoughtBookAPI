@@ -23,7 +23,7 @@ export const list_frontpage_thoughts = (req, res) => {
 }
 
 export const create_a_thought = (req, res) => {
-  var new_thought = new Thought(req.body);
+  const new_thought = new Thought(req.body);
   new_thought.save((err, thought) => {
     if (err) {
       logger.log('error', err);
@@ -32,7 +32,6 @@ export const create_a_thought = (req, res) => {
     res.json(thought);
   });
 };
-
 
 export const read_a_thought = (req, res) => {
   Thought.findById(req.params.thoughtId, (err, thought) => {
