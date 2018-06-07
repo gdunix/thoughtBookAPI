@@ -55,6 +55,10 @@ router.route('/bookGenre')
 router.route('/bookStates')
     .get(bookController.list_all_books_states);
 
+//Book Lists
+router.route('/bookLists')
+    .get(bookController.list_all_bookLists);
+
 //Thoughts
 router.route('/thoughts')
     .get(thoughtController.list_all_thoughts);

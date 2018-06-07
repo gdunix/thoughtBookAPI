@@ -4,8 +4,8 @@ import State from '../../models/Books/stateModel';
 import Author from '../../models/Books/authorModel';
 import Genre from '../../models/genreModel';
 import Quote from '../../models/quoteModel';
+import BookList from '../../models/Books/bookListModel';
 import messages from '../../utils/constants';
-
 
 export const list_all_books = (req, res) => {
   Book.find({})
@@ -238,4 +238,16 @@ export const create_book_quote = (req, res) => {
     })
   });
 }
+
+export const list_all_bookLists = (req, res) => {
+  BookList.find({})
+    .exec((err, bookLists) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.getBooksError);
+      }
+      
+      res.json(bookLists);
+    });
+};
 
