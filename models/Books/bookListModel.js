@@ -4,7 +4,7 @@ let Schema = mongoose.Schema;
 
 let BookListSchema = mongoose.Schema({
   url: {type: String},
-  name: {type: String},
+  text: {type: String},
   showRating: {type: Boolean}
 });
 
