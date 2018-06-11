@@ -14,8 +14,10 @@ router.get('/health-check', (req, res) =>
 //Authors
 router.route('/authors')
     .get(authorController.list_all_authors);
-router.route('/author')   
+router.route('/author')
     .post(authorController.add_author);
+router.route('/author/:authorId')
+    .put(authorController.update_an_author);
 
 //Books
 router.route('/books')
@@ -97,7 +99,7 @@ router.route('/moviesRecentlyWatched/:limit')
 
 router.route('/movies/releaseDates')
     .get(movieController.releaseDates);
-    
+
 router.route('/moviesByReleaseDate/:releaseDate')
     .get(movieController.moviesByReleaseDate);
 

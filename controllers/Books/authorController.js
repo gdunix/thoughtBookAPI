@@ -24,6 +24,18 @@ export const add_author = (req, res) => {
         });
 };
 
+export const update_an_author = (req, res) => {
+    Author.findOneAndUpdate({ _id: req.params.authorId }, req.body, { new: true })
+      .exec((err, author) => {
+        if (err) {
+          logger.log('error', err);
+          return res.status(500).send(messages.getBooksError);
+        }
+  
+        res.json(author);
+      });
+  };
+
 export const list_all_authors = (req, res) => {
     Author.find({}, (err, author) => {
         if (err) {
