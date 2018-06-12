@@ -1,4 +1,6 @@
 import Thought from '../../models/Thoughts/thoughtModel';
+import logger from '../../utils/logger';
+import messages from '../../utils/constants';
 
 export const list_all_thoughts = (req, res) => {
   Thought.find({}, function (err, thought) {
