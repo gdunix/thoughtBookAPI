@@ -97,7 +97,7 @@ router.route('/moviesByTitle/:title')
 router.route('/moviesRecentlyWatched/:limit')
     .get(movieController.findRecentlyWatched);
 
-router.route('/movies/releaseDates')
+router.route('/movieReleaseDates')
     .get(movieController.releaseDates);
 
 router.route('/moviesByReleaseDate/:releaseDate')

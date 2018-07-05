@@ -12,7 +12,7 @@ let BookSchema = mongoose.Schema({
   readStartDate: {type: Date},
   readEndDate: {type: Date},
   readAt: {type: Date},
-  grade: {type: Number, required: true, min: 0, max: 10},
+  grade: {type: Number, min: 0, max: 10},
   state: {type: Schema.ObjectId, ref: 'State', required: true},
   genres: [{type: Schema.ObjectId, ref: 'Genre', required: true}],
   quotes: [{type: Schema.ObjectId, ref: 'Quote'}]
