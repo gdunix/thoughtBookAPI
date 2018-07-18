@@ -16,6 +16,7 @@ export const list_all_movies = (req, res) => {
 
 export const create_a_movie = (req, res) => {
   const new_movie = new Movie(req.body);
+  new_movie.grade = new_movie.grade || 0;
   new_movie.save((err, movie) => {
     if (err) {
       console.log(err);
