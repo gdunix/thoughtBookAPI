@@ -113,7 +113,7 @@ export const findRecentlyWatched = (req, res) => {
 }
 
 export const releaseDates = (req, res) => {
-  Movie.find()
+  Movie.find({"grade": { $gt: 0} })
     .distinct('release_date')
     .exec((err, years) => {
       if (err) {
@@ -133,7 +133,7 @@ export const releaseDates = (req, res) => {
 
 export const moviesByReleaseDate = (req, res) => {
   const dt = req.params.releaseDate;
-  Movie.find({ "release_date": dt }).sort({ grade: -1 })
+  Movie.find({ "release_date": dt, "grade": { $gt: 0} }).sort({ grade: -1 })
     .select('_id title grade imageURL')
     .exec((err, movies) => {
       if (err) {
