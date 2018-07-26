@@ -39,17 +39,16 @@ function isUserUnique(reqBody, cb) {
 }
 
 export function signup(req, res) {  
-    winston.info('Sign Up Call');
-    var body = req.body;
+    const body = req.body;
     isUserUnique(body, function(err) {
       if (err) {
         logger.log('error', err);
         return res.status(403).json(err);
       };
 
-      var hash = bcrypt.hashSync(body.password.trim(), 10);
-      var user = new User({
-       name: body.name.trim(),
+      const hash = bcrypt.hashSync(body.password.trim(), 10);
+      const user = new User({
+       name: body.fullName.trim(),
        username: body.username.trim(),
        email: body.email.trim(),
        password: hash,
@@ -62,7 +61,7 @@ export function signup(req, res) {
           logger.log('error', err);
           return res.status(500).json(err);
         }
-        var token = utils.generateToken(user); 
+        const token = utils.generateToken(user); 
         res.json({
           user: user,
           token: token
