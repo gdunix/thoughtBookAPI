@@ -61,6 +61,9 @@ router.route('/bookStates')
 router.route('/bookLists')
     .get(bookController.list_all_bookLists);
 
+router.route('/booksByList/:listId')
+    .get(bookController.list_by_listId)
+
 //Thoughts
 router.route('/thoughts')
     .get(thoughtController.list_all_thoughts);

@@ -1,11 +1,11 @@
 import logger from '../../utils/logger';
 import Book from '../../models/Books/bookModel';
 import State from '../../models/Books/stateModel';
-import Author from '../../models/Books/authorModel';
 import Genre from '../../models/genreModel';
 import Quote from '../../models/quoteModel';
 import BookList from '../../models/Books/bookListModel';
 import messages from '../../utils/constants';
+
 
 export const list_all_books = (req, res) => {
   Book.find({})
@@ -120,6 +120,38 @@ export const delete_a_book = (req, res) => {
   });
 };
 
+const getBooksByState = ({
+  stateName = '',
+  limit = 20,
+  res
+}) => {
+  State.findOne({ name: stateName }, (error, state) => {
+    if (error) {
+      logger.log('error', error);
+      return res.status(500).send(messages.getBooksError);
+    }
+    if (state === null) {
+      return res.status(500).send(messages.getBooksError);
+    }
+
+    Book.find({ state: state._id }).sort({ name: -1 }).limit(parseInt(limit))
+      .populate('author')
+      .populate('state')
+      .exec((err, books) => {
+        if (err) {
+          logger.log('error', err);
+          return res.status(500).send(messages.getBooksError);
+        }
+
+        res.status(200).send({
+          title: stateName,
+          showRating: false,
+          books
+        });
+      })
+  })
+}
+
 export const list_all_byState = (req, res) => {
   const limit = req.params.limit;
   const state = req.params.state;
@@ -146,6 +178,37 @@ export const list_all_byState = (req, res) => {
       })
   })
 };
+
+const getBestBooksByGenre = ({
+  genreName = '',
+  limit = 20,
+  res
+}) => {
+  Genre.findOne({ name: genreName }, (error, genre) => {
+    if (error) {
+      logger.log('error', error);
+      return res.status(500).send(messages.getBooksError);
+    }
+    if (genre === null) {
+      return res.status(500).send(messages.getBooksError);
+    }
+
+    Book.find({ genres: { $in: [genre._id] } }).sort({ grade: -1 }).limit(parseInt(limit))
+      .populate('state')
+      .exec((err, books) => {
+        if (err) {
+          logger.log('error', err);
+          return res.status(500).send(messages.getBooksError);
+        }
+
+        res.json({
+          title: genreName,
+          showRating: true,
+          books
+        });
+      })
+  });
+}
 
 export const list_all_bestbyGenre = (req, res) => {
   const limit = req.params.limit;
@@ -246,8 +309,35 @@ export const list_all_bookLists = (req, res) => {
         logger.log('error', err);
         return res.status(500).send(messages.getBooksError);
       }
-      
+
       res.json(bookLists);
     });
+};
+
+export const list_by_listId = (req, res) => {
+  const listId = req.params.listId;
+  BookList.findById(listId, (err, list) => {
+    if (err) {
+      logger.log('error', err);
+      return res.status(500).send("No Book List Found");
+    }
+
+    switch (list.type) {
+      case "State":
+        return getBooksByState({
+          stateName: list.query,
+          limit: 20,
+          res
+        });
+      case "Genre":
+        return getBestBooksByGenre({
+          genreName: list.query,
+          limit: 20,
+          res
+        })
+      default:
+        return res.status(500).send("Generic Error");
+    }
+  });
 };
 
