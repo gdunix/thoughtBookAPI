@@ -6,7 +6,8 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --recursive",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
-    "start": "npm run build && cross-env NODE_ENV=development babel-watch server.js"
+    "start": "npm run build && cross-env NODE_ENV=development babel-watch server.js",
+    "start:remote": "npm run build && cross-env NODE_ENV=remote babel-watch server.js"
   },
   "author": "",
   "license": "ISC",
