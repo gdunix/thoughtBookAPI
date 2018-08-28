@@ -3,18 +3,21 @@ import logger from '../../utils/logger';
 import messages from '../../utils/constants';
 
 export const list_all_thoughts = (req, res) => {
-  Thought.find({}, function (err, thought) {
+  Thought.find({})
+  .select('_id name')
+  .sort({ order: -1 })
+  .exec((err, thoughts) => {
     if (err) {
       logger.log('error', err);
       return res.status(500).send(messages.generalError);
     }
 
-    res.json(thought);
+    res.json(thoughts);
   });
 };
 
 export const list_frontpage_thoughts = (req, res) => {
-  Thought.find({ frontpage: true }, function (err, thoughts) {
+  Thought.find({ frontpage: true }, (err, thoughts) => {
     if (err) {
       logger.log('error', err);
       return res.status(500).send(messages.generalError);
