@@ -11,7 +11,7 @@
     "test": "cross-env NODE_ENV=test mocha --recursive",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "start:dev": "yarn build && cross-env NODE_ENV=development babel-watch server.js",
-    "start:remote": "yarn build && cross-env NODE_ENV=remote babel-watch server.js",
+    "start:remote": "yarn build && cross-env NODE_ENV=remote nodemon dist/server.js",
     "start": "yarn build && cross-env NODE_ENV=production node dist/server.js"
   },
   "author": "",
@@ -20,7 +20,8 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-watch": "^2.0.7",
-    "cross-env": "^5.0.5"
+    "cross-env": "^5.0.5",
+    "nodemon": "^1.18.4"
   },
   "dependencies": {
     "bcrypt": "^2.0.1",
