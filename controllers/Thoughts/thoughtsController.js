@@ -4,7 +4,7 @@ import messages from '../../utils/constants';
 
 export const list_all_thoughts = (req, res) => {
   Thought.find({})
-  .select('_id name')
+  .select('_id name text')
   .sort({ order: -1 })
   .exec((err, thoughts) => {
     if (err) {
