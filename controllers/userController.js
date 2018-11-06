@@ -2,7 +2,7 @@ import logger from '../utils/logger';
 import User from '../models/userModel';
 import * as utils from '../utils/index';
 import winston from 'winston';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 function isUserUnique(reqBody, cb) {
     var username = reqBody.username ? reqBody.username.trim() : '';
