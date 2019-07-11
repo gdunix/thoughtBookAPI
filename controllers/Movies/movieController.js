@@ -14,6 +14,26 @@ export const list_all_movies = (req, res) => {
     });
 };
 
+export const get_movies_with_paging = (req, res) => {
+  const page = req.params.page;
+  const limit = req.params.size;
+  const skip = limit * (page - 1);
+
+  Movie.find({ $and: [{ grade: { $gt: 0 } }, { seenAt: { $exists: true } }] })
+    .sort({ seenAt: -1 })
+    .limit(parseInt(limit))
+    .skip(parseInt(skip))
+    .select('_id title grade imageURL')
+    .exec((err, movies) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.getMoviesError);
+      }
+      res.json(movies);
+    })
+
+};
+
 export const create_a_movie = (req, res) => {
   const new_movie = new Movie(req.body);
   new_movie.grade = new_movie.grade || 0;

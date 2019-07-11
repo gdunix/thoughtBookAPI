@@ -106,4 +106,7 @@ router.route('/movieReleaseDates')
 router.route('/moviesByReleaseDate/:releaseDate')
     .get(movieController.moviesByReleaseDate);
 
+router.route('/moviesLatestSeen/:page/:size')
+    .get(movieController.get_movies_with_paging);
+
 export default router;
