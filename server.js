@@ -2,9 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import fs from 'fs';
-import morgan from 'morgan';
 import path from 'path';
-import jwt from 'jsonwebtoken';
 import config from './config';
 import router from './routes/index';
 
@@ -32,9 +30,6 @@ app.use((req, res, next) => {
 
 // create a write stream (in append mode)
 let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
-
-// setup the logger
-app.use(morgan('combined', {stream: accessLogStream}))
 
 app.use('/api', router);
 
