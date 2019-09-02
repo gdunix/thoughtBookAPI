@@ -1,5 +1,6 @@
 import logger from '../../utils/logger';
 import Movie from '../../models/Movies/movieModel';
+import Quote from '../../models/quoteModel';
 import messages from '../../utils/constants';
 
 export const list_all_movies = (req, res) => {
@@ -70,6 +71,7 @@ export const read_a_movie_full = (req, res) => {
 export const read_a_movie = (req, res) => {
   Movie.
     findById(req.params.movieId)
+    .populate('quotes')
     .exec((err, movie) => {
       if (err) {
         logger.log('error', err);
@@ -133,7 +135,7 @@ export const findRecentlyWatched = (req, res) => {
 }
 
 export const releaseDates = (req, res) => {
-  Movie.find({"grade": { $gt: 0} })
+  Movie.find({ "grade": { $gt: 0 } })
     .distinct('release_date')
     .exec((err, years) => {
       if (err) {
@@ -153,7 +155,7 @@ export const releaseDates = (req, res) => {
 
 export const moviesByReleaseDate = (req, res) => {
   const dt = req.params.releaseDate;
-  Movie.find({ "release_date": dt, "grade": { $gt: 0} }).sort({ grade: -1 })
+  Movie.find({ "release_date": dt, "grade": { $gt: 0 } }).sort({ grade: -1 })
     .select('_id title grade imageURL')
     .exec((err, movies) => {
       if (err) {
@@ -162,5 +164,59 @@ export const moviesByReleaseDate = (req, res) => {
       }
 
       res.json(movies);
+    })
+}
+
+export const getMoviesWithQuotes = (req, res) => {
+  Movie.find({ quotes: { $exists: true }, $where: 'this.quotes.length>0' })
+    .select('_id title grade imageURL quotes')
+    .exec((err, movies) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.getMoviesError);
+      }
+
+      res.json(movies);
+    })
+}
+
+export const getQuotes = (req, res) => {
+  Quote.find({})
+    .exec((err, quotes) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send('Quotes not found');
+      }
+
+      res.json(quotes);
+    });
+};
+
+export const addQuote = async (req, res) => {
+  Movie.
+    findById(req.params.movieId)
+    .exec((err, movie) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.getMoviesError);
+      }
+      let quote = new Quote();
+      quote.text = req.body.text;
+      quote.save((err, quote) => {
+        if (err) {
+          logger.log('error', err);
+          return res.status(500).send('Quote not saved');
+        }
+
+        movie.quotes = [...movie.quotes, quote];
+        movie.save((error, movie) => {
+          if (error) {
+            logger.log('error', err);
+            return res.status(500).send(messages.getMoviesError);
+          }
+
+          res.json(movie);
+        })
+      })
     })
 }

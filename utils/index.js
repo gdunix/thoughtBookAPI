@@ -35,5 +35,3 @@ export function verifyToken(token, cb) {
       cb(err, user);
   });
 }
-
-

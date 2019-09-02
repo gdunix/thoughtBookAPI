@@ -109,4 +109,13 @@ router.route('/moviesByReleaseDate/:releaseDate')
 router.route('/moviesLatestSeen/:page/:size')
     .get(movieController.get_movies_with_paging);
 
+router.route('/getMoviesWithQuotes')
+    .get(movieController.getMoviesWithQuotes);
+
+router.route('/movie/:movieId/addQuote')
+    .post(movieController.addQuote);
+
+router.route('/quotes')
+    .get(movieController.getQuotes);
+
 export default router;
