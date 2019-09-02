@@ -10,6 +10,7 @@ let app = express(),
     port = process.env.PORT || 4000;
 
 mongoose.Promise = global.Promise;
+mongoose.set('useNewUrlParser', true);
 mongoose.connect(config.db)
     .then(() =>  console.log('connection successful'))
     .catch((err) => console.error(err));
