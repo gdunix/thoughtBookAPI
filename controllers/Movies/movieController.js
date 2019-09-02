@@ -192,7 +192,7 @@ export const getQuotes = (req, res) => {
     });
 };
 
-export const addQuote = async (req, res) => {
+export const addQuote = (req, res) => {
   Movie.
     findById(req.params.movieId)
     .exec((err, movie) => {
