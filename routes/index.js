@@ -5,6 +5,7 @@ import * as thoughtController from '../controllers/Thoughts/thoughtsController';
 import * as genreController from '../controllers/genreController';
 import * as userController from '../controllers/userController';
 import * as movieController from '../controllers/Movies/movieController';
+import { auth } from '../middlewares';
 
 const router = express.Router();
 
@@ -15,20 +16,20 @@ router.get('/health-check', (req, res) =>
 router.route('/authors')
     .get(authorController.list_all_authors);
 router.route('/author')
-    .post(authorController.add_author);
+    .post([auth, authorController.add_author]);
 router.route('/author/:authorId')
-    .put(authorController.update_an_author);
+    .put([auth, authorController.update_an_author]);
 
 //Books
 router.route('/books')
     .get(bookController.list_all_books);
 router.route('/book')
-    .post(bookController.create_a_book);
+    .post([auth, bookController.create_a_book]);
 
 router.route('/book/:bookId')
     .get(bookController.read_a_book)
-    .put(bookController.update_a_book)
-    .delete(bookController.delete_a_book);
+    .put([auth, bookController.update_a_book])
+    .delete([auth, bookController.delete_a_book]);
 
 router.route('/bookFull/:bookId')
     .get(bookController.read_a_book_full)
@@ -46,7 +47,7 @@ router.route('/booksBest')
     .get(bookController.list_best);
 
 router.route('/bookQuotes/:bookId')
-    .post(bookController.create_book_quote);
+    .post([auth, bookController.create_book_quote]);
 //Book Genre
 router.route('/bookGenres')
     .get(genreController.list_all_book_genres)
@@ -68,11 +69,11 @@ router.route('/booksByList/:listId')
 router.route('/thoughts')
     .get(thoughtController.list_all_thoughts);
 router.route('/thought')
-    .post(thoughtController.create_a_thought);
+    .post([auth, thoughtController.create_a_thought]);
 router.route('/thought/:thoughtId')
     .get(thoughtController.read_a_thought)
-    .put(thoughtController.update_a_thought)
-    .delete(thoughtController.delete_a_thought);
+    .put([auth, thoughtController.update_a_thought])
+    .delete([auth, thoughtController.delete_a_thought]);
 router.route('/frontpageThoughts')
     .get(thoughtController.list_frontpage_thoughts)
 //User
@@ -87,12 +88,12 @@ router.route('/users/getUserFromToken')
 router.route('/movies')
     .get(movieController.list_all_movies);
 router.route('/movie')
-    .post(movieController.create_a_movie);
+    .post([auth, movieController.create_a_movie]);
 
 router.route('/movie/:movieId')
     .get(movieController.read_a_movie)
-    .put(movieController.update_a_movie)
-    .delete(movieController.delete_a_movie);
+    .put([auth, movieController.update_a_movie])
+    .delete([auth, movieController.delete_a_movie]);
 
 router.route('/moviesByTitle/:title')
     .get(movieController.findMovieByTitle);
@@ -113,7 +114,7 @@ router.route('/getMoviesWithQuotes')
     .get(movieController.getMoviesWithQuotes);
 
 router.route('/movie/:movieId/addQuote')
-    .post(movieController.addQuote);
+    .post([auth, movieController.addQuote]);
 
 router.route('/quotes')
     .get(movieController.getQuotes);
