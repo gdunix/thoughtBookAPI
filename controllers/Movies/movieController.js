@@ -136,7 +136,7 @@ export const findRecentlyWatched = (req, res) => {
 
 export const moviesBest = (req, res) => {
   const limit = req.params.limit || 20;
-  Movie.find({ $and: [{ grade: { $gt: 4 } }, { seenAt: { $exists: true } }] }).sort({ grade: -1}).limit(parseInt(limit))
+  Movie.find({ $and: [{ grade: { $gt: 4 } }, { seenAt: { $exists: true } }] }).sort({ grade: -1, release_date: -1 }).limit(parseInt(limit))
     .select('_id title grade imageURL')
     .exec((err, movies) => {
       if (err) {
@@ -232,4 +232,44 @@ export const addQuote = (req, res) => {
         })
       })
     })
+}
+
+export const deletQuote = (req, res) => {
+  const quoteId = req.params.quoteId;
+  if (quoteId) {
+    Quote.
+      deleteOne({ _id: req.params.quoteId })
+      .exec((err) => {
+        if (err) {
+          console.log(err)
+          logger.log('error', err);
+          return res.status(500).send(messages.getMoviesError);
+        }
+        Movie.find({ quotes: quoteId })
+          .exec((err, movies) => {
+            if (err) {
+              logger.log('error', err);
+              return res.status(500).send('Quotes not found');
+            }
+
+            if(movies[0]) {
+              console.log(movies[0].title)
+              let mv = movies[0];
+              mv.quotes = mv.quotes.filter(f => f != quoteId);
+              mv.save((error, movie) => {
+                if (error) {
+                  logger.log('error', err);
+                  return res.status(500).send(messages.getMoviesError);
+                }
+      
+                res.json(movie);
+              }) 
+            } else {
+              return res.status(200);
+            }
+          });
+      })
+    } else {
+      return res.status(500).send('Wrong quoteId');
+    }
 }

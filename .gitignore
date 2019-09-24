@@ -4,4 +4,4 @@ access.log
 /combined.log
 /dist
 *.log
-env.json
+

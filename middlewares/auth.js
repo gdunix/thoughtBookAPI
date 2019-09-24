@@ -6,12 +6,10 @@ export default (req, res, next) => {
         if (bearerHeader) {
             const bearer = bearerHeader.split(' ');
             const bearerToken = bearer[1];
-            console.log(bearerHeader)
-            const v = utils.verifyToken(bearerToken, (err, user) => {
+            utils.verifyToken(bearerToken, err => {
                 if (err) {
                     return res.status(403).json({ message: 'Invalid token' });
                 }
-                console.log(user)
             });
             next();
         } else {

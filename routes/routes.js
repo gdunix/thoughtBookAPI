@@ -119,6 +119,9 @@ router.route('/movie/:movieId/addQuote')
 router.route('/quotes')
     .get(movieController.getQuotes);
 
+router.route('/deleteQuote/:quoteId')
+    .delete(movieController.deletQuote);
+
 router.route('/moviesBest/:limit')
     .get(movieController.moviesBest);
 

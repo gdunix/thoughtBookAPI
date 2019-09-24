@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-    if (config.allowCrossOrigin) {
+    if (config.allowCrossOrigin || true) {
         res.header("Access-Control-Allow-Origin", '*');
     }
     res.header("Access-Control-Request-Headers", "*");
