@@ -136,7 +136,7 @@ export const findRecentlyWatched = (req, res) => {
 
 export const moviesBest = (req, res) => {
   const limit = req.params.limit || 20;
-  Movie.find({ $and: [{ grade: { $gt: 4 } }, { seenAt: { $exists: true } }] }).sort({ grade: -1, release_date: -1 }).limit(parseInt(limit))
+  Movie.find({ $and: [{ grade: { $gt: 4 } }, { seenAt: { $exists: true } }] }).sort({ grade: -1, release_date: 1 }).limit(parseInt(limit))
     .select('_id title grade imageURL')
     .exec((err, movies) => {
       if (err) {
