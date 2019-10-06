@@ -1,6 +1,6 @@
-import Genre from '../models/genreModel';
-import Category from '../models/categoryModel';
-import logger from '../utils/logger';
+import Genre from '../../models/genreModel';
+import Category from '../../models/categoryModel';
+import logger from '../../utils/logger';
 
 export const add_book_genre = (req, res) => {
     Category.findOne({ name: 'Books' }, (error, category) => {

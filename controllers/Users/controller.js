@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 
-import logger from '../utils/logger';
-import User from '../models/userModel';
-import * as utils from '../utils/index';
+import logger from '../../utils/logger';
+import User from '../../models/userModel';
+import * as utils from '../../utils/index';
 
 const isUserUnique = (reqBody, cb) => {
   var username = reqBody.username ? reqBody.username.trim() : '';

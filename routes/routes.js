@@ -1,10 +1,12 @@
 import express from 'express';
-import * as authorController from '../controllers/Books/authorController';
-import * as bookController from '../controllers/Books/bookController';
-import * as thoughtController from '../controllers/Thoughts/thoughtsController';
-import * as genreController from '../controllers/genreController';
-import * as userController from '../controllers/userController';
-import * as movieController from '../controllers/Movies/movieController';
+
+import * as authorController from '../controllers/Authors';
+import * as bookController from '../controllers/Books';
+import * as thoughtController from '../controllers/Thoughts';
+import * as genreController from '../controllers/Genres';
+import * as userController from '../controllers/Users';
+import * as moviesController from '../controllers/Movies';
+import * as quotesController from '../controllers/Quotes';
 import { auth } from '../middlewares';
 
 const router = express.Router();
@@ -86,43 +88,55 @@ router.route('/users/getUserFromToken')
 
 //Movies
 router.route('/movies')
-    .get(movieController.list_all_movies);
+    .get(moviesController.list_all_movies);
 router.route('/movie')
-    .post([auth, movieController.create_a_movie]);
+    .post([auth, moviesController.create_a_movie]);
 
 router.route('/movie/:movieId')
-    .get(movieController.read_a_movie)
-    .put([auth, movieController.update_a_movie])
-    .delete([auth, movieController.delete_a_movie]);
+    .get(moviesController.read_a_movie)
+    .put([auth, moviesController.update_a_movie])
+    .delete([auth, moviesController.delete_a_movie]);
 
 router.route('/moviesByTitle/:title')
-    .get(movieController.findMovieByTitle);
+    .get(moviesController.findMovieByTitle);
 
 router.route('/moviesRecentlyWatched/:limit')
-    .get(movieController.findRecentlyWatched);
+    .get(moviesController.findRecentlyWatched);
 
 router.route('/movieReleaseDates')
-    .get(movieController.releaseDates);
+    .get(moviesController.releaseDates);
 
 router.route('/moviesByReleaseDate/:releaseDate')
-    .get(movieController.moviesByReleaseDate);
+    .get(moviesController.moviesByReleaseDate);
 
 router.route('/moviesLatestSeen/:page/:size')
-    .get(movieController.get_movies_with_paging);
+    .get(moviesController.get_movies_with_paging);
 
 router.route('/getMoviesWithQuotes')
-    .get(movieController.getMoviesWithQuotes);
+    .get(moviesController.getMoviesWithQuotes);
 
 router.route('/movie/:movieId/addQuote')
-    .post([auth, movieController.addQuote]);
+    .post([auth, moviesController.addMovieQuote]);
+
+router.route('/movie/:movieId/updateQuotes')
+    .put(moviesController.updateMovieQuotes);
+
+router.route('/movie/:movieId/changeImage')
+    .put([auth, moviesController.updateMovieImage]);
 
 router.route('/quotes')
-    .get(movieController.getQuotes);
+    .get(moviesController.getQuotes);
+
+router.route('/quotes/:quoteId')
+    .put([auth, quotesController.update_quote]);
+
+router.route('/quotesByMovie/:movieId')
+    .get(moviesController.getMovieQuotes);
 
 router.route('/deleteQuote/:quoteId')
-    .delete(movieController.deletQuote);
+    .delete([auth, moviesController.deleteMovieQuote]);
 
 router.route('/moviesBest/:limit')
-    .get(movieController.moviesBest);
+    .get(moviesController.moviesBest);
 
 export default router;

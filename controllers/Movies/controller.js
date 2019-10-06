@@ -3,6 +3,8 @@ import Movie from '../../models/Movies/movieModel';
 import Quote from '../../models/quoteModel';
 import messages from '../../utils/constants';
 
+import { actions as quoteActions } from '../Quotes';
+
 export const list_all_movies = (req, res) => {
   Movie.find({})
     .exec((err, movies) => {
@@ -86,6 +88,7 @@ export const update_a_movie = (req, res) => {
   Movie.findOneAndUpdate({ _id: req.params.movieId }, req.body, { new: true })
     .populate('author')
     .populate('state')
+    .populate('quotes')
     .exec((err, movie) => {
       if (err) {
         logger.log('error', err);
@@ -205,7 +208,106 @@ export const getQuotes = (req, res) => {
     });
 };
 
-export const addQuote = (req, res) => {
+export const getMovieQuotes = async (req, res) => {
+    const _id = req.params.movieId;
+    if (_id) {
+      Movie.
+      findById(_id)
+      .populate('quotes')
+      .exec((err, movie) => {
+        if (err) {
+          logger.log('error', err);
+          console.log(err)
+          return res.status(500).send('No id provided')
+        }
+        res.json(movie.quotes);
+      });
+    } else {
+      return res.status(500).send('No id provided');
+    }
+};
+
+export const updateMovieQuotes = async (req, res) => {
+  const _id = req.params.movieId;
+  if (_id) {
+    try {
+      const movie = await Movie.findOne({ _id });
+      if (!movie)
+        return res.status(500).send('Movie found');
+
+      let movieQuotes = [];
+      const quotes = req.body;
+      console.log(quotes);
+      for (const q of quotes) {
+        if (!q._id) {
+          console.log('add', q);
+          const newQuoteRes = await quoteActions.addQuote(q.text);
+          console.log(newQuoteRes)
+          if (newQuoteRes.status === 200) {
+            movieQuotes.push(newQuoteRes.data._id.toString());
+          }
+        } else {
+          console.log('update', q);
+          await quoteActions.updateQuote(q._id, q.text);
+          movieQuotes.push(q._id);
+        }
+      };
+      console.log('movieQuotes', movieQuotes);
+      let quotesToRemove = [];
+      if (quotes.length === movieQuotes.length) {
+        quotesToRemove = movie.quotes.filter(q => !movieQuotes.includes(q._id.toString()));
+        movie.quotes = movieQuotes;
+      }
+      await movie.save();
+      if(quotesToRemove){
+        console.log('remove', quotesToRemove);
+        Quote.deleteMany({ _id : { $in : quotesToRemove } }, err => 
+          console.log('deleteMany', err))       
+      }
+      
+      Movie.
+      findById(_id)
+      .populate('quotes')
+      .exec((err, movie) => {
+        if (err) {
+          logger.log('error', err);
+          console.log(err)
+          return res.status(500).send('No id provided')
+        }
+        res.json(movie);
+      });
+    } catch (err) {
+      console.log(err)
+      return res.status(500).send('Error occured');
+    }
+  } else {
+    return res.status(500).send('No movieId');
+  }
+};
+
+export const updateMovieImage = async (req, res) => {
+  const _id = req.params.movieId;
+  const mainImage = req.body.mainImage;
+  if (_id && !!mainImage) {
+    const movie = await Movie.findOne({ _id });
+      if (!movie)
+        return res.status(500).send('Movie found');
+      try{
+        movie.imageURL = mainImage;
+        await movie.save();
+
+        res.json(movie);
+      } catch(err) {
+        console.log(err)
+        return res.status(500).send('Error occured');
+      }
+
+  } else {
+    return res.status(500).send('Invalid movieId or imageURL');
+  }
+}
+
+export const addMovieQuote = (req, res) => {
   Movie.
     findById(req.params.movieId)
     .exec((err, movie) => {
@@ -234,7 +336,7 @@ export const addQuote = (req, res) => {
     })
 }
 
-export const deletQuote = (req, res) => {
+export const deleteMovieQuote = (req, res) => {
   const quoteId = req.params.quoteId;
   if (quoteId) {
     Quote.
@@ -252,7 +354,7 @@ export const deletQuote = (req, res) => {
               return res.status(500).send('Quotes not found');
             }
 
-            if(movies[0]) {
+            if (movies[0]) {
               console.log(movies[0].title)
               let mv = movies[0];
               mv.quotes = mv.quotes.filter(f => f != quoteId);
@@ -261,15 +363,15 @@ export const deletQuote = (req, res) => {
                   logger.log('error', err);
                   return res.status(500).send(messages.getMoviesError);
                 }
-      
+
                 res.json(movie);
-              }) 
+              })
             } else {
               return res.status(200);
             }
           });
       })
-    } else {
-      return res.status(500).send('Wrong quoteId');
-    }
+  } else {
+    return res.status(500).send('Wrong quoteId');
+  }
 }

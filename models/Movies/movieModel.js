@@ -18,7 +18,8 @@ let MovieSchema = mongoose.Schema({
     place: {type:String},
     grade: {type: Number, min: 0, max: 10},
     genres: [{type:String}],
-    quotes: [{type: Schema.ObjectId, ref: 'Quote'}]
+    quotes: [{type: Schema.ObjectId, ref: 'Quote'}],
+    images: [{type:String}]
 });
   
 export default mongoose.model('Movie', MovieSchema);
