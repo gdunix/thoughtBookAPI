@@ -64,14 +64,14 @@ export const update_a_thought = (req, res) => {
 
 
 export const delete_a_thought = (req, res) => {
-  Thought.remove({
+  Thought.deleteOne({
     _id: req.params.thoughtId
-  }, (err, thought) => {
+  }, err => {
     if (err) {
       logger.log('error', err);
       return res.status(500).send(messages.generalError);
     }
-    res.json(req.params.thoughtId);
+    return res.status(200).send({});
   });
 };
 
