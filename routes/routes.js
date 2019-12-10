@@ -139,4 +139,7 @@ router.route('/deleteQuote/:quoteId')
 router.route('/moviesBest/:limit')
     .get(moviesController.moviesBest);
 
+router.route('/moviesBestOf/:from/:to')
+    .get(moviesController.bestof);
+
 export default router;

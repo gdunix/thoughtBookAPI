@@ -209,9 +209,9 @@ export const getQuotes = (req, res) => {
 };
 
 export const getMovieQuotes = async (req, res) => {
-    const _id = req.params.movieId;
-    if (_id) {
-      Movie.
+  const _id = req.params.movieId;
+  if (_id) {
+    Movie.
       findById(_id)
       .populate('quotes')
       .exec((err, movie) => {
@@ -222,9 +222,9 @@ export const getMovieQuotes = async (req, res) => {
         }
         res.json(movie.quotes);
       });
-    } else {
-      return res.status(500).send('No id provided');
-    }
+  } else {
+    return res.status(500).send('No id provided');
+  }
 };
 
 export const updateMovieQuotes = async (req, res) => {
@@ -259,23 +259,23 @@ export const updateMovieQuotes = async (req, res) => {
         movie.quotes = movieQuotes;
       }
       await movie.save();
-      if(quotesToRemove){
+      if (quotesToRemove) {
         console.log('remove', quotesToRemove);
-        Quote.deleteMany({ _id : { $in : quotesToRemove } }, err => 
-          console.log('deleteMany', err))       
+        Quote.deleteMany({ _id: { $in: quotesToRemove } }, err =>
+          console.log('deleteMany', err))
       }
-      
+
       Movie.
-      findById(_id)
-      .populate('quotes')
-      .exec((err, movie) => {
-        if (err) {
-          logger.log('error', err);
-          console.log(err)
-          return res.status(500).send('No id provided')
-        }
-        res.json(movie);
-      });
+        findById(_id)
+        .populate('quotes')
+        .exec((err, movie) => {
+          if (err) {
+            logger.log('error', err);
+            console.log(err)
+            return res.status(500).send('No id provided')
+          }
+          res.json(movie);
+        });
     } catch (err) {
       console.log(err)
       return res.status(500).send('Error occured');
@@ -290,17 +290,17 @@ export const updateMovieImage = async (req, res) => {
   const mainImage = req.body.mainImage;
   if (_id && !!mainImage) {
     const movie = await Movie.findOne({ _id });
-      if (!movie)
-        return res.status(500).send('Movie found');
-      try{
-        movie.imageURL = mainImage;
-        await movie.save();
+    if (!movie)
+      return res.status(500).send('Movie found');
+    try {
+      movie.imageURL = mainImage;
+      await movie.save();
 
-        res.json(movie);
-      } catch(err) {
-        console.log(err)
-        return res.status(500).send('Error occured');
-      }
+      res.json(movie);
+    } catch (err) {
+      console.log(err)
+      return res.status(500).send('Error occured');
+    }
 
   } else {
     return res.status(500).send('Invalid movieId or imageURL');
@@ -374,4 +374,28 @@ export const deleteMovieQuote = (req, res) => {
   } else {
     return res.status(500).send('Wrong quoteId');
   }
+}
+
+export const bestof = (req, res) => {
+  const from = req.params.from || 0;
+  const to = req.params.to || 0;
+  if (to <= from) {
+    return res.status(500).send('Invalid params');
+  }
+
+  Movie.find({
+    $and: [
+      { release_date: { $gt: from, $lt: to } },
+      { grade: { $gt: 4 } },
+      { seenAt: { $exists: true } }
+    ]
+  }).sort({ grade: -1, release_date: 1 })
+    .select('_id title grade imageURL')
+    .exec((err, movies) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.getMoviesError);
+      }
+      res.json(movies);
+    })
 }
