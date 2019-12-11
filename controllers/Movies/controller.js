@@ -385,7 +385,7 @@ export const bestof = (req, res) => {
 
   Movie.find({
     $and: [
-      { release_date: { $gt: from, $lt: to } },
+      { release_date: { $gt: from - 1, $lt: to + 1 } },
       { grade: { $gt: 4 } },
       { seenAt: { $exists: true } }
     ]
