@@ -17,10 +17,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.5.5",
+    "@babel/core": "^7.12.10",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "babel-watch": "^7.0.0",
+    "babel-watch": "^7.3.0",
     "cross-env": "^7.0.3",
     "nodemon": "^2.0.6"
   },
@@ -32,6 +32,6 @@
     "mocha": "^8.2.1",
     "mongoose": "^5.11.10",
     "npm": "^6.14.10",
-    "winston": "^3.0.0-rc1"
+    "winston": "^3.3.3"
   }
 }
