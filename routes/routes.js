@@ -145,5 +145,7 @@ router.route('/moviesBestOf/:from/:to')
 router.route('/findMoviesByDirector/:director')
     .get(moviesController.findMoviesByDirector);
 
+router.route('/getDirectors')
+    .get(moviesController.getDirectors);
 
 export default router;

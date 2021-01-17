@@ -413,3 +413,16 @@ export const findMoviesByDirector = (req, res) => {
       res.json(movies);
     })
 };
+
+export const getDirectors = (_, res) => {
+  Movie.find({ "grade": { $gt: 0 } })
+    .distinct('director')
+    .exec((err, directors) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.getMoviesError);
+      }
+
+      res.json(directors.sort());
+    })
+};
