@@ -399,3 +399,17 @@ export const bestof = (req, res) => {
       res.json(movies);
     })
 }
+
+export const findMoviesByDirector = (req, res) => {
+  const director = req.params.director || '';
+  Movie.find({ "director": director, "grade": { $gt: 0 } }).sort({ grade: -1 })
+    .select('_id title grade imageURL')
+    .exec((err, movies) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.getMoviesError);
+      }
+
+      res.json(movies);
+    })
+};
