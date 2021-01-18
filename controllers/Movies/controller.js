@@ -426,3 +426,26 @@ export const getDirectors = (_, res) => {
       res.json(directors.sort());
     })
 };
+
+export const getDirectorsCount = (_, res) => {
+  Movie.aggregate([
+    { $match: { "grade": { $gt: 0 } } },
+    {
+      $group: {
+        _id: "$director",
+        sum: { $sum: 1}
+      }
+    },
+    {
+      $sort: { "_id": 1 },
+    }
+  ])
+    .exec((err, directors) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.getMoviesError);
+      }
+
+      res.json(directors.sort());
+    })
+};

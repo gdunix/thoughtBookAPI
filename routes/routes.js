@@ -148,4 +148,7 @@ router.route('/findMoviesByDirector/:director')
 router.route('/getDirectors')
     .get(moviesController.getDirectors);
 
+router.route('/getDirectorsCount')
+    .get(moviesController.getDirectorsCount);
+
 export default router;
