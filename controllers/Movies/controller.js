@@ -433,7 +433,7 @@ export const getDirectorsCount = (_, res) => {
     {
       $group: {
         _id: "$director",
-        sum: { $sum: 1}
+        sum: { $sum: 1 }
       }
     },
     {
@@ -447,5 +447,33 @@ export const getDirectorsCount = (_, res) => {
       }
 
       res.json(directors.sort());
+    })
+};
+
+export const getRandomQuotes = (req, res) => {
+  const limit = req.params.limit || 5;
+  Movie.find({ "grade": { $gt: 0 } })
+    .populate('quotes')
+    .exec((err, movies) => {
+      if (err) {
+        logger.log('error', err);
+        return res.status(500).send(messages.getMoviesError);
+      }
+      const quotes = movies.reduce((acc, curr) =>
+        Array.isArray(curr.quotes) ?
+          [...acc, ...curr.quotes.map(q => ({
+            quote: q.text,
+            movie: curr.title,
+            url: curr.imageURL
+          }))] : [...acc, curr.quotes.map(q => ({
+            quote: q.text,
+            movie: curr.title,
+            url: curr.imageURL
+          }))],
+        []);
+      const shuffled = quotes.sort(() => 0.5 - Math.random());
+      const randomQuotes = shuffled.slice(0, limit)
+
+      res.json(randomQuotes);
     })
 };

@@ -151,4 +151,7 @@ router.route('/getDirectors')
 router.route('/getDirectorsCount')
     .get(moviesController.getDirectorsCount);
 
+router.route('/getRandomQuotes')
+    .get(moviesController.getRandomQuotes);
+
 export default router;
