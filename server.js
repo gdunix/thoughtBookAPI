@@ -10,9 +10,8 @@ let app = express(),
     port = process.env.PORT || 4000;
 
 mongoose.Promise = global.Promise;
-mongoose.set('useNewUrlParser', true);
-mongoose.connect(config.db)
-    .then(() =>  console.log('connection successful'))
+mongoose.connect(config.db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('connection successful'))
     .catch((err) => console.error(err));
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,13 +29,13 @@ app.use((req, res, next) => {
 });
 
 // create a write stream (in append mode)
-let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
+let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
 app.use('/api', router);
 
-app.use(function(req, res) {
-    res.status(404).send({url: req.originalUrl + ' not found'})
-  });
+app.use(function (req, res) {
+    res.status(404).send({ url: req.originalUrl + ' not found' })
+});
 
 app.listen(port);
 
