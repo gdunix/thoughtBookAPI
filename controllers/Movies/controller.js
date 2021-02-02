@@ -462,10 +462,12 @@ export const getRandomQuotes = (req, res) => {
       const quotes = movies.reduce((acc, curr) =>
         Array.isArray(curr.quotes) ?
           [...acc, ...curr.quotes.map(q => ({
+            movieId: curr._id,
             quote: q.text,
             movie: curr.title,
             url: curr.imageURL
           }))] : [...acc, curr.quotes.map(q => ({
+            movieId: curr._id,
             quote: q.text,
             movie: curr.title,
             url: curr.imageURL
