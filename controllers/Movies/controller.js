@@ -452,7 +452,7 @@ export const getDirectorsCount = (_, res) => {
 
 export const getRandomQuotes = (req, res) => {
   const limit = req.params.limit || 5;
-  Movie.find({ "grade": { $gt: 0 } })
+  Movie.find({ "grade": { $gt: 0 }, "quotes.0": { "$exists": true } })
     .populate('quotes')
     .exec((err, movies) => {
       if (err) {
