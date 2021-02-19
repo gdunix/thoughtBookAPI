@@ -459,14 +459,8 @@ export const getRandomQuotes = (req, res) => {
         logger.log('error', err);
         return res.status(500).send(messages.getMoviesError);
       }
-      const quotes = movies.reduce((acc, curr) =>
-        Array.isArray(curr.quotes) ?
+      const quotes = movies.reduce((acc, curr) => 
           [...acc, ...curr.quotes.map(q => ({
-            movieId: curr._id,
-            quote: q.text,
-            movie: curr.title,
-            url: curr.imageURL
-          }))] : [...acc, curr.quotes.map(q => ({
             movieId: curr._id,
             quote: q.text,
             movie: curr.title,
