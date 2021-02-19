@@ -124,6 +124,9 @@ router.route('/movie/:movieId/updateQuotes')
 router.route('/movie/:movieId/changeImage')
     .put([auth, moviesController.updateMovieImage]);
 
+router.route('/movie/:movieId/refreshImages')
+    .put([auth, moviesController.updateMovieImages]);
+
 router.route('/quotes')
     .get(moviesController.getQuotes);
 

@@ -307,6 +307,28 @@ export const updateMovieImage = async (req, res) => {
   }
 }
 
+export const updateMovieImages = async (req, res) => {
+  const _id = req.params.movieId;
+  const images = req.body.images;
+  if (_id && !!images) {
+    const movie = await Movie.findOne({ _id });
+    if (!movie)
+      return res.status(500).send('Movie found');
+    try {
+      movie.images = images;
+      await movie.save();
+
+      res.json(movie);
+    } catch (err) {
+      console.log(err)
+      return res.status(500).send('Error occured');
+    }
+
+  } else {
+    return res.status(500).send('Invalid movieId or imageURL');
+  }
+}
+
 export const addMovieQuote = (req, res) => {
   Movie.
     findById(req.params.movieId)
