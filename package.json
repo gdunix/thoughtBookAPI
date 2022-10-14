@@ -2,7 +2,7 @@
   "name": "api",
   "version": "0.4.9",
   "engines": {
-    "node": "18.x"
+    "node": "17.x"
   },
   "description": "",
   "main": "index.js",
