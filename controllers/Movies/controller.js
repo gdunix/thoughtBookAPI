@@ -131,7 +131,7 @@ export const findRecentlyWatched = (req, res) => {
     .exec((err, movies) => {
       if (err) {
         logger.log('error', err);
-        return res.status(500).send(messages.getMoviesError);
+        return res.status(500).send(messages.getMoviesError + err.response);
       }
       res.json(movies);
     })
