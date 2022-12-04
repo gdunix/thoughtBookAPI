@@ -6,10 +6,10 @@
   "scripts": {
     "clean": "rm -rf dist",
     "test": "cross-env NODE_ENV=test mocha --recursive",
-    "build": "npm run clean && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "build": "yarn clean && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "start:dev": "cross-env NODE_ENV=development babel-watch server.js",
     "start:remote": "yarn build && cross-env NODE_ENV=remote nodemon dist/server.js",
-    "start": "npm run build && node dist/server.js"
+    "start": "yarn build && node dist/server.js"
   },
   "author": "",
   "license": "ISC",
