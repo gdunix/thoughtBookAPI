@@ -22,7 +22,7 @@ app.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", '*');
     }
     
-    res.header("Access-Control-Allow-Origin", 'https://cerulean-brown-bear-fez.cyclic.app');
+    res.header("Access-Control-Allow-Origin", 'https://cerulean-brown-bear-fez.cyclic.app', 'https://http://localhost:9000', 'https://movieapp-a9f70.web.app/');
     res.header("Access-Control-Request-Headers", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
@@ -43,5 +43,4 @@ app.listen(port);
 
 
 console.log('ThoughtBook RESTful API server started on: ' + port);
-
 export default app;
