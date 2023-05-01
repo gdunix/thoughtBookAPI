@@ -8,7 +8,7 @@
     "test": "cross-env NODE_ENV=test mocha --recursive",
     "build": "npm run clean && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "start:dev": "cross-env NODE_ENV=development babel-watch server.js",
-    "start:remote": "yarn build && cross-env NODE_ENV=remote nodemon dist/server.js",
+    "start:remote": "npm run build && cross-env NODE_ENV=remote nodemon dist/server.js",
     "start": "npm run build && node dist/server.js"
   },
   "author": "",
@@ -25,6 +25,7 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
+    "firebase": "^9.17.2",
     "jsonwebtoken": "^8.0.1",
     "mocha": "^8.2.1",
     "mongoose": "^5.11.10",
