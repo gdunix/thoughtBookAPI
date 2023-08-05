@@ -2,7 +2,7 @@
   "name": "api",
   "version": "0.4.9",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist",
     "test": "cross-env NODE_ENV=test mocha --recursive",
