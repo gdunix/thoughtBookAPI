@@ -3,6 +3,7 @@
   "version": "0.4.9",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "clean": "rm -rf dist",
     "test": "cross-env NODE_ENV=test mocha --recursive",
