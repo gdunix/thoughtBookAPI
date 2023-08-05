@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "babel-version": "babel --version",
     "clean": "rm -rf dist",
     "test": "cross-env NODE_ENV=test mocha --recursive",
     "build": "npm run clean && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
@@ -16,7 +17,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.12.10",
-    "babel-cli": "^6.26.0",
+    "babel-cli": "^7.0.0",
     "babel-preset-env": "^1.7.0",
     "babel-watch": "^7.3.0",
     "cross-env": "^7.0.3",
