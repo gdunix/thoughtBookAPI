@@ -237,22 +237,17 @@ export const updateMovieQuotes = async (req, res) => {
 
       let movieQuotes = [];
       const quotes = req.body;
-      console.log(quotes);
       for (const q of quotes) {
         if (!q._id) {
-          console.log('add', q);
           const newQuoteRes = await quoteActions.addQuote(q.text);
-          console.log(newQuoteRes)
           if (newQuoteRes.status === 200) {
             movieQuotes.push(newQuoteRes.data._id.toString());
           }
         } else {
-          console.log('update', q);
           await quoteActions.updateQuote(q._id, q.text);
           movieQuotes.push(q._id);
         }
       };
-      console.log('movieQuotes', movieQuotes);
       let quotesToRemove = [];
       if (quotes.length === movieQuotes.length) {
         quotesToRemove = movie.quotes.filter(q => !movieQuotes.includes(q._id.toString()));
@@ -260,7 +255,6 @@ export const updateMovieQuotes = async (req, res) => {
       }
       await movie.save();
       if (quotesToRemove) {
-        console.log('remove', quotesToRemove);
         Quote.deleteMany({ _id: { $in: quotesToRemove } }, err =>
           console.log('deleteMany', err))
       }
@@ -377,7 +371,6 @@ export const deleteMovieQuote = (req, res) => {
             }
 
             if (movies[0]) {
-              console.log(movies[0].title)
               let mv = movies[0];
               mv.quotes = mv.quotes.filter(f => f != quoteId);
               mv.save((error, movie) => {
