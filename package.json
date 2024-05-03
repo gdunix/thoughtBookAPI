@@ -2,8 +2,7 @@
   "name": "api",
   "version": "0.4.9",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "server.js",
   "scripts": {
     "clean": "rm -rf dist",
     "test": "cross-env NODE_ENV=test mocha --recursive",
@@ -16,7 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.12.10",
-    "babel-cli": "^7.0.0",
+    "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-watch": "^7.3.0",
     "cross-env": "^7.0.3",
@@ -26,7 +25,6 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
-    "firebase": "^9.17.2",
     "jsonwebtoken": "^8.0.1",
     "mocha": "^8.2.1",
     "mongoose": "^5.11.10",

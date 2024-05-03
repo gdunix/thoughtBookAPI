@@ -3,8 +3,9 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import fs from 'fs';
 import path from 'path';
-import config from './config';
 import router from './routes/index';
+import config from './config';
+
 
 let app = express(),
     port = process.env.PORT || 4000;
