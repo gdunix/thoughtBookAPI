@@ -4,14 +4,14 @@ import bodyParser from 'body-parser';
 import fs from 'fs';
 import path from 'path';
 import router from './routes/index';
-import config from './config';
+require('dotenv').config()
 
 
 let app = express(),
     port = process.env.PORT || 4000;
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.db, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('connection successful'))
     .catch((err) => console.error(err));
 
@@ -19,10 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-    if (config.allowCrossOrigin || true) {
-        res.header("Access-Control-Allow-Origin", '*');
-    }
-    
+    res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Origin", 'https://cerulean-brown-bear-fez.cyclic.app', 'https://http://localhost:9000', 'https://movieapp-a9f70.web.app/');
     res.header("Access-Control-Request-Headers", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, OPTIONS, DELETE");

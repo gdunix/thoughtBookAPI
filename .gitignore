@@ -6,4 +6,5 @@ access.log
 *.log
 *.lock
 .DS_Store
+.env
 
